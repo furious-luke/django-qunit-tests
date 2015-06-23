@@ -50,3 +50,8 @@ from qunit_tests.tests import QUnitTestCase
 class SomethingTestCase(QUnitTestCase):
     html = os.path.join(os.path.dirname(__file__), 'qunit/test_something.html')
 ```
+
+## Example Site
+
+Please take a look in `examples/example_site` to see a *very* simple example
+of using qUnit tests with Django.
