@@ -38,4 +38,4 @@ class QUnitTestCase(SimpleTestCase):
     def run_test(self, test):
         asrts = test.find_elements_by_xpath('.//li')
         for asrt in asrts:
-            self.assertEqual(test.get_attribute('class'), 'pass')
+            self.assertEqual(test.get_attribute('class'), 'pass', test.text)
