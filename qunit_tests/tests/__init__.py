@@ -24,12 +24,17 @@ class QUnitTestCaseMetaclass(type):
             wd = webdriver.PhantomJS()
             wd.get(html)
             tests = wd.find_elements_by_xpath('//ol[@id="qunit-tests"]/li')
+            if not tests:
+                wd.quit()
+                raise Exception('No tests found')
+            attrs['wd'] = wd
             for ii, test in enumerate(tests):
                 name = str(test.find_element_by_xpath('.//span[@class="test-name"]').get_attribute('innerHTML'))
                 name = 'test_' + re.sub('\W|^(?=\d)', '_', name)
                 attrs[name] = Wrapper(test)
 
         return super(QUnitTestCaseMetaclass, mcs).__new__(mcs, name, bases, attrs)
+
 
 @six.add_metaclass(QUnitTestCaseMetaclass)
 class QUnitTestCase(SimpleTestCase):
@@ -39,3 +44,8 @@ class QUnitTestCase(SimpleTestCase):
         asrts = test.find_elements_by_xpath('.//li')
         for asrt in asrts:
             self.assertEqual(test.get_attribute('class'), 'pass')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.wd.quit()
+        return super(QUnitTestCase, cls).tearDownClass()
